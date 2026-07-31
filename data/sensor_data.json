@@ -1,1 +1,12 @@
 
+{
+  "device_id": "SENSOR-NODE-014",
+  "location": "Warehouse-A-Zone3",
+  "timestamp": "2026-07-28T09:15:32Z",
+  "readings": {
+    "temperature_c": 27.4,
+    "humidity_percent": 61.2,
+    "battery_voltage": 3.71
+  },
+  "sequence_number": 10245
+}
