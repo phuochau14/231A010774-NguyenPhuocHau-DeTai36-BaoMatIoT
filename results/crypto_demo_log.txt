@@ -1,1 +1,59 @@
 
+======================================================================
+BƯỚC A: DỮ LIỆU GỐC
+======================================================================
+{
+  "device_id": "SENSOR-NODE-014",
+  "location": "Warehouse-A-Zone3",
+  "timestamp": "2026-07-28T09:15:32Z",
+  "readings": {
+    "temperature_c": 27.4,
+    "humidity_percent": 61.2,
+    "battery_voltage": 3.71
+  },
+  "sequence_number": 10245
+}
+
+SHA-256 hash : 527fd0d5fe7c1174d19ee7b2c21ec2a5faab211adebc4aa3866f1b18f7fd70ae
+HMAC-SHA256  : efa0633539ef45cec60297e76ca9b4a5b4ca62258e8cabd6d7e2e49c7262fba8
+RSA signature (rút gọn): 46401f08ac0581b9058482242180f9644df7d895f4a27fa3cfda5a0b73cb96eb...
+Xác minh chữ ký với dữ liệu gốc: True
+
+AES-GCM ciphertext (rút gọn): ed8302483376afb69f563b0da22d953fe344c987629d7d41dc685cccf664db1f...
+Giải mã lại khớp dữ liệu gốc: True
+
+======================================================================
+BƯỚC B: TẤN CÔNG GIẢ LẬP - SỬA 1 KÝ TỰ TRONG DỮ LIỆU
+(vd: kẻ tấn công chỉnh temperature_c từ 27.4 -> 99.4 để đánh lừa hệ thống)
+======================================================================
+{
+  "device_id": "SENSOR-NODE-014",
+  "location": "Warehouse-A-Zone3",
+  "readings": {
+    "battery_voltage": 3.71,
+    "humidity_percent": 61.2,
+    "temperature_c": 99.4
+  },
+  "sequence_number": 10245,
+  "timestamp": "2026-07-28T09:15:32Z"
+}
+
+SHA-256 hash (sau khi sửa) : 83e43243f8dfd9abcb5d756d570930796df72416641aef02bca513fc63beab18
+HMAC-SHA256  (sau khi sửa) : 4c776f5e1a2016f70c453df9ded182269d9814035dbd5f88cfdb906be92ff637
+
+>> Hash gốc  : 527fd0d5fe7c1174d19ee7b2c21ec2a5faab211adebc4aa3866f1b18f7fd70ae
+>> Hash mới  : 83e43243f8dfd9abcb5d756d570930796df72416641aef02bca513fc63beab18
+>> Hash có thay đổi hoàn toàn không? CÓ (avalanche effect)
+
+>> Server nhận dữ liệu ĐÃ BỊ SỬA nhưng MAC cũ (m1) đi kèm ->
+>> Kết quả xác minh HMAC: False  (phải là False)
+
+>> Xác minh chữ ký RSA (sig1 ký trên dữ liệu gốc) với dữ liệu ĐÃ SỬA:
+>> Kết quả: False  (phải là False)
+
+======================================================================
+BƯỚC C: KẺ TẤN CÔNG KHÔNG CÓ KHÓA -> KHÔNG THỂ GIẢ MẠO HMAC HỢP LỆ
+======================================================================
+Attacker tự tạo HMAC với khóa ĐOÁN MÒ: 217f04735f141bd4eea5f4eba7b2548796521670033e0b4d423ec698b2c6aa02
+Server dùng khóa THẬT để xác minh: False (phải là False)
+=> Chứng minh: chỉ hash không đủ (ai cũng tính được), phải cần HMAC/chữ ký (cần khóa bí mật).
